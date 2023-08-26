@@ -8,6 +8,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectSchema;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Control\CliController;
+use SilverStripe\Dev\Debug;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 
@@ -64,7 +65,6 @@ class Silvergraph extends CliController {
 
         //Get all DataObject subclasses
         $dataClasses = ClassInfo::subclassesFor(DataObject::class);
-
         //Remove DataObject itself
         array_shift($dataClasses);
 
@@ -77,7 +77,7 @@ class Silvergraph extends CliController {
             }
         }
 
-        $excludeArray = explode(",", $opt['exclude']);
+        $excludeArray = explode(",", $opt['exclude'] ?? '');
 
         //Get the intersection of the two - grouped by the folder
         foreach($dataClasses as $key => $dataClass) {
@@ -203,7 +203,7 @@ class Silvergraph extends CliController {
 
         // Defend against source_file_comments
         Config::nest();
-        Config::inst()->update(SSViewer::class, 'source_file_comments', false);
+        SSViewer::config()->set('source_file_comments', false);
 
         // Render the output
         $output = $this->renderWith("Silvergraph");

@@ -16,14 +16,14 @@ _Example call: http://example.com/Silvergraph/png?location=cms,framework,mysite_
 ### Installation on OSX
 
 * Install Graphviz via Homebrew: `brew install graphviz` and note down the location
-* Add the location to your `_ss_environment.php` file, postpending 'dot' to the end of the path, e.g.:
-`define('SILVERGRAPH_GRAPHVIZ_PATH', '/usr/local/Cellar/graphviz/2.38.0/bin/dot');`
+* Add the location of the graphvis`bin` dir to your `.env` file e.g.:
+`SILVERGRAPH_GRAPHVIZ_PATH="/opt/homebrew/Cellar/graphviz/8.0.5/bin/"`
 * Visit `?flush=1` to update the routing table.
 
 ## Requirements
- * SilverStripe 3.0.0+
+ * SilverStripe ^4|^5
  * To create images: GraphViz (latest version) http://www.graphviz.org/
-  * To install (Debian/Ubuntu): `apt-get install graphviz`
+ * To install (Debian/Ubuntu): `apt-get install graphviz`
 
 ## Usage
 
