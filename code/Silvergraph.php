@@ -54,6 +54,7 @@ class Silvergraph extends CliController {
         $opt['fields'] =        $this->paramDefault('fields', 1, 'numeric');
         $opt['include_root'] =  $this->paramDefault('include-root', 0, 'numeric');
         $opt['exclude'] =       $this->paramDefault('exclude');
+        $opt['include'] =       $this->paramDefault('include');
         $opt['group'] =         $this->paramDefault('group', 0, 'numeric');
         $opt['rankdir'] =       $this->paramDefault('rankdir');
 
@@ -63,10 +64,15 @@ class Silvergraph extends CliController {
 
         $renderClasses = array();
 
-        //Get all DataObject subclasses
-        $dataClasses = ClassInfo::subclassesFor(DataObject::class);
-        //Remove DataObject itself
-        array_shift($dataClasses);
+        // if we have an include list, use it instead of all dataclasses
+        if ($opt['include']) {
+            $dataClasses = explode(",", $opt['include'] ?? '');
+        } else {
+            //Get all DataObject subclasses
+            $dataClasses = ClassInfo::subclassesFor(DataObject::class);
+            //Remove DataObject itself
+            array_shift($dataClasses);
+        }
 
         //Get all classes in a specific folder(s)
         $folders = explode(",", $opt['location']);
@@ -223,6 +229,9 @@ class Silvergraph extends CliController {
         $relationList = new ArrayList();
         if (is_array($relationArray)) {
             foreach($relationArray as $name => $remoteClass) {
+                if (is_array($remoteClass)) {
+                    continue; // bail out, since this is probably a through relationship
+                }
                 //Strip everything after a dot (polymorphic relations)
                 $remoteClass = explode('.', $remoteClass)[0];
                 //Only add the relation if it's not in the exclusion array
